@@ -1481,16 +1481,10 @@
 
         // Handle routing
         function handleRouting() {
-            const path = window.location.pathname;
             const hash = window.location.hash;
             
-            // Handle product pages (e.g., /product/p1)
-            if (path.startsWith('/product/')) {
-                const productId = path.split('/product/')[1];
-                showProductDetails(productId);
-            } 
             // Handle hash-based routing (e.g., #p1)
-            else if (hash.startsWith('#p')) {
+            if (hash.startsWith('#') && hash.length > 1) {
                 const productId = hash.substring(1); // Remove the #
                 showProductDetails(productId);
             }
@@ -1500,12 +1494,6 @@
                 productDetailsSection.style.display = 'none';
                 categoriesContainer.style.display = 'flex';
             }
-        }
-
-        // Update URL for product details
-        function updateProductUrl(productId) {
-            const newUrl = `${window.location.pathname}#${productId}`;
-            window.history.pushState({}, '', newUrl);
         }
 
         // Initialize the app
@@ -1557,7 +1545,7 @@
                     categoryTitle.textContent = category === 'الكل' ? 'منتجات مميزة' : category;
                     
                     // Update URL
-                    window.history.pushState({}, '', '/');
+                    window.location.hash = '';
                 });
                 categoriesContainer.appendChild(categoryBtn);
                 
@@ -1581,7 +1569,7 @@
                     closeSideMenuFn();
                     
                     // Update URL
-                    window.history.pushState({}, '', '/');
+                    window.location.hash = '';
                 });
                 sideMenuCategories.appendChild(sideMenuCategory);
             });
@@ -1608,6 +1596,13 @@
                     products.sort((a, b) => a.position - b.position);
                     
                     displayProducts();
+                    
+                    // Check if we need to show a product based on URL hash
+                    const hash = window.location.hash;
+                    if (hash.startsWith('#') && hash.length > 1) {
+                        const productId = hash.substring(1);
+                        showProductDetails(productId);
+                    }
                 } else {
                     products = [];
                     displayProducts();
@@ -1690,6 +1685,13 @@
 
         // Show product details
         function showProductDetails(productId) {
+            // First check if products are loaded
+            if (products.length === 0) {
+                // If products aren't loaded yet, wait a bit and try again
+                setTimeout(() => showProductDetails(productId), 500);
+                return;
+            }
+            
             const product = products.find(p => p.id === productId);
             if (!product) {
                 // If product not found, redirect to home
@@ -1703,7 +1705,7 @@
             currentProductId = productId;
             
             // Update URL
-            updateProductUrl(productId);
+            window.location.hash = productId;
             
             // Hide categories when viewing product details
             categoriesContainer.style.display = 'none';
@@ -2285,7 +2287,7 @@
                 productDetailsSection.style.display = 'none';
                 categoriesContainer.style.display = 'flex';
                 // Update URL
-                window.history.pushState({}, '', '/');
+                window.location.hash = '';
             });
 
             // Cart button
