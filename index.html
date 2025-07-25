@@ -1419,7 +1419,7 @@
     <script>
         // Firebase configuration for smoth
         const firebaseConfig = {
-            apiKey: "AIzaSyCQdC6J5k9Z6Z9Z9Z9Z9Z9Z9Z9Z9Z9",
+            apiKey: "AIzaSyCQdC6J5k9Z6Z9Z9Z9Z9Z9Z9Z9Z9",
             authDomain: "smoth-6aeb0.firebaseapp.com",
             databaseURL: "https://smoth-6aeb0-default-rtdb.firebaseio.com",
             projectId: "smoth-6aeb0",
@@ -1479,12 +1479,45 @@
         // Shipping cost
         const SHIPPING_COST = 35;
 
+        // Handle routing
+        function handleRouting() {
+            const path = window.location.pathname;
+            const hash = window.location.hash;
+            
+            // Handle product pages (e.g., /product/p1)
+            if (path.startsWith('/product/')) {
+                const productId = path.split('/product/')[1];
+                showProductDetails(productId);
+            } 
+            // Handle hash-based routing (e.g., #p1)
+            else if (hash.startsWith('#p')) {
+                const productId = hash.substring(1); // Remove the #
+                showProductDetails(productId);
+            }
+            // Default view
+            else {
+                productsSection.style.display = 'block';
+                productDetailsSection.style.display = 'none';
+                categoriesContainer.style.display = 'flex';
+            }
+        }
+
+        // Update URL for product details
+        function updateProductUrl(productId) {
+            const newUrl = `${window.location.pathname}#${productId}`;
+            window.history.pushState({}, '', newUrl);
+        }
+
         // Initialize the app
         function initApp() {
             loadCategories();
             loadProducts();
             updateCart();
             setupEventListeners();
+            handleRouting();
+            
+            // Listen for hash changes
+            window.addEventListener('hashchange', handleRouting);
         }
 
         // Load categories from Firebase
@@ -1522,6 +1555,9 @@
                     
                     // Update category title
                     categoryTitle.textContent = category === 'الكل' ? 'منتجات مميزة' : category;
+                    
+                    // Update URL
+                    window.history.pushState({}, '', '/');
                 });
                 categoriesContainer.appendChild(categoryBtn);
                 
@@ -1543,6 +1579,9 @@
                     
                     // Close side menu
                     closeSideMenuFn();
+                    
+                    // Update URL
+                    window.history.pushState({}, '', '/');
                 });
                 sideMenuCategories.appendChild(sideMenuCategory);
             });
@@ -1550,7 +1589,7 @@
 
         // Load products from Firebase
         function loadProducts() {
-            database.ref('products').on('value', (snapshot) => {
+            database.ref('products').orderByChild('position').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
                     // Convert Firebase object to array
@@ -1560,8 +1599,14 @@
                         // Ensure soldOut is boolean (default to false if not provided)
                         soldOut: data[key].soldOut === true,
                         // Ensure originalPrice exists (default to price if not provided)
-                        originalPrice: data[key].originalPrice || data[key].price
+                        originalPrice: data[key].originalPrice || data[key].price,
+                        // Ensure position exists (default to 0 if not provided)
+                        position: data[key].position || 0
                     }));
+                    
+                    // Sort products by position
+                    products.sort((a, b) => a.position - b.position);
+                    
                     displayProducts();
                 } else {
                     products = [];
@@ -1646,9 +1691,19 @@
         // Show product details
         function showProductDetails(productId) {
             const product = products.find(p => p.id === productId);
-            if (!product) return;
+            if (!product) {
+                // If product not found, redirect to home
+                window.location.hash = '';
+                productsSection.style.display = 'block';
+                productDetailsSection.style.display = 'none';
+                categoriesContainer.style.display = 'flex';
+                return;
+            }
             
             currentProductId = productId;
+            
+            // Update URL
+            updateProductUrl(productId);
             
             // Hide categories when viewing product details
             categoriesContainer.style.display = 'none';
@@ -2229,6 +2284,8 @@
                 productsSection.style.display = 'block';
                 productDetailsSection.style.display = 'none';
                 categoriesContainer.style.display = 'flex';
+                // Update URL
+                window.history.pushState({}, '', '/');
             });
 
             // Cart button
@@ -2267,6 +2324,12 @@
             // Close review
             closeReview.addEventListener('click', closeReviewForm);
             cancelReview.addEventListener('click', closeReviewForm);
+            
+            // Menu button
+            menuBtn.addEventListener('click', openSideMenu);
+            
+            // Close side menu
+            closeSideMenu.addEventListener('click', closeSideMenuFn);
         }
 
         // Initialize the app
