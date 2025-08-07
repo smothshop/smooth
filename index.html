@@ -2246,6 +2246,12 @@
                     const orderId = ref.key;
                     const whatsappMessage = generateWhatsAppMessage(order, orderId);
                     
+                    // Track the purchase with Meta Pixel
+                    fbq('track', 'Purchase', {
+                        currency: "EGP",
+                        value: total
+                    });
+                    
                     // Open WhatsApp with the order details
                     window.open(`https://wa.me/201096928182?text=${encodeURIComponent(whatsappMessage)}`, '_blank');
                     
