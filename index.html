@@ -6,6 +6,7 @@
     <title>سموث</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
     <!-- Meta Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -23,6 +24,7 @@
     src="https://www.facebook.com/tr?id=1273953137848596&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Meta Pixel Code -->
+    
     <style>
         * {
             margin: 0;
@@ -1774,6 +1776,15 @@
             productsSection.style.display = 'none';
             productDetailsSection.style.display = 'block';
             
+            // Track ViewContent event for Facebook Pixel
+            fbq('track', 'ViewContent', {
+                content_ids: [product.id],
+                content_type: 'product',
+                content_name: product.name,
+                currency: 'EGP',
+                value: product.price
+            });
+            
             // Load reviews for this product
             loadProductReviews(productId);
         }
@@ -2016,6 +2027,16 @@
                 return;
             }
             
+            // Track AddToCart event for Facebook Pixel
+            fbq('track', 'AddToCart', {
+                content_ids: [product.id],
+                content_type: 'product',
+                content_name: product.name,
+                currency: 'EGP',
+                value: product.price,
+                quantity: 1
+            });
+            
             // Check if product is already in cart
             const existingItem = cart.find(item => item.id === productId);
             
@@ -2249,7 +2270,12 @@
                     // Track the purchase with Meta Pixel
                     fbq('track', 'Purchase', {
                         currency: "EGP",
-                        value: total
+                        value: total,
+                        contents: cart.map(item => ({
+                            id: item.id,
+                            quantity: item.quantity
+                        })),
+                        content_type: 'product'
                     });
                     
                     // Open WhatsApp with the order details
