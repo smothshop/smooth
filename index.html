@@ -2262,11 +2262,7 @@
             
             // Save to Firebase for analytics
             database.ref('orders').push(order)
-                .then((ref) => {
-                    // Generate WhatsApp message
-                    const orderId = ref.key;
-                    const whatsappMessage = generateWhatsAppMessage(order, orderId);
-                    
+                .then(() => {
                     // Track the purchase with Meta Pixel
                     fbq('track', 'Purchase', {
                         currency: "EGP",
@@ -2277,9 +2273,6 @@
                         })),
                         content_type: 'product'
                     });
-                    
-                    // Open WhatsApp with the order details
-                    window.open(`https://wa.me/201096928182?text=${encodeURIComponent(whatsappMessage)}`, '_blank');
                     
                     // Clear cart
                     cart = [];
@@ -2300,31 +2293,6 @@
                 .catch(error => {
                     showNotification('خطأ في تقديم الطلب: ' + error.message);
                 });
-        }
-
-        // Generate WhatsApp message with order details
-        function generateWhatsAppMessage(order, orderId) {
-            let message = `مرحباً، لدي طلب جديد!\n\n`;
-            message += `*رقم الطلب:* ${orderId.substring(0, 8)}\n`;
-            message += `*الاسم:* ${order.customer.name}\n`;
-            message += `*الهاتف:* ${order.customer.phone}\n`;
-            message += `*الهاتف الإضافي:* ${order.customer.phone2 || 'لا يوجد'}\n`;
-            message += `*العنوان:* ${order.customer.address}\n`;
-            message += `*المحافظة:* ${order.customer.governorate}\n\n`;
-            
-            message += `*المنتجات:*\n`;
-            order.items.forEach(item => {
-                message += `- ${item.name} (${item.quantity}x) - ${item.price.toFixed(2)} جنيه\n`;
-            });
-            
-            message += `\n*الإجمالي:* ${order.subtotal.toFixed(2)} جنيه\n`;
-            message += `*الشحن:* ${order.shipping.toFixed(2)} جنيه\n`;
-            message += `*الإجمالي النهائي:* ${order.total.toFixed(2)} جنيه\n\n`;
-            
-            message += `*ملاحظات:* ${order.customer.notes || 'لا يوجد'}\n\n`;
-            message += `شكراً لكم!`;
-            
-            return message;
         }
 
         // Setup event listeners
