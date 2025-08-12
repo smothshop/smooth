@@ -3,10 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم سموث</title>
+    <title>سموث</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1273953137848596');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1273953137848596&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
     <style>
         * {
             margin: 0;
@@ -19,414 +37,481 @@
             color: #333;
             font-family: 'Montserrat', sans-serif;
             font-weight: 300;
-        }
-
-        :root {
-            --primary-color: #B89F65;
-            --primary-light: rgba(184, 159, 101, 0.1);
-            --primary-dark: #8a6d3b;
-            --text-color: #333333;
-            --text-light: #777777;
-            --bg-color: #FFFFFF;
-            --card-bg: #F9F9F9;
-            --border-color: #e0e0e0;
-            --success-color: #4CAF50;
-            --warning-color: #FFC107;
-            --error-color: #F44336;
-            --info-color: #2196F3;
-        }
-
-        /* Password Modal */
-        .password-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+            flex-direction: column;
         }
 
-        .password-box {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
+        /* Shipping Banner */
+        .shipping-banner {
+            background-color: #FFD700;
+            color: #000;
             text-align: center;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #B89F65;
         }
 
-        .password-box h2 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .password-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .password-submit {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .password-submit:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .password-error {
-            color: var(--error-color);
-            margin-top: 1rem;
-            display: none;
-        }
-
-        /* Admin Header */
-        .admin-header {
-            background-color: var(--bg-color);
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--primary-color);
+        header {
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid #B89F65;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .admin-logo {
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo img {
+            height: 60px;
+        }
+
+        .header-actions {
             display: flex;
-            align-items: center;
             gap: 15px;
         }
 
-        .logo-img {
-            height: 50px;
-        }
-
-        .admin-title {
-            font-family: 'Caveat', cursive;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #000;
-        }
-
-        .logout-btn {
-            background-color: var(--primary-color);
-            color: white;
+        .menu-btn, .cart-btn {
+            background: none;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        /* Main Container */
-        .admin-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Tabs */
-        .admin-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 2rem;
-        }
-
-        .admin-tab {
-            padding: 12px 24px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            font-weight: 500;
-            color: var(--text-light);
-            transition: all 0.3s ease;
-        }
-
-        .admin-tab.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        .admin-tab-content {
-            display: none;
-        }
-
-        .admin-tab-content.active {
-            display: block;
-        }
-
-        /* Cards */
-        .admin-card {
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-        }
-
-        /* Orders */
-        .orders-list {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .order-card {
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            grid-column: 1 / -1;
-        }
-
-        .order-id {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .order-date {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        .order-status {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background-color: var(--warning-color);
+            font-size: 22px;
             color: #000;
+            cursor: pointer;
+            position: relative;
         }
 
-        .status-processing {
-            background-color: var(--info-color);
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            background-color: #000;
             color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .status-shipped {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .status-delivered {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .status-cancelled {
-            background-color: var(--error-color);
-            color: white;
-        }
-
-        .order-customer {
-            font-weight: 500;
-        }
-
-        .order-total {
-            font-weight: 600;
-        }
-
-        .order-actions {
+        .categories {
             display: flex;
             gap: 10px;
+            padding: 1rem;
+            overflow-x: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        .view-btn, .delete-order-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
+        .category-btn {
+            padding: 8px 15px;
+            background-color: #f8f8f8;
+            border: 1px solid #B89F65;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 0.9rem;
+            white-space: nowrap;
             transition: all 0.3s ease;
         }
 
-        .view-btn:hover {
-            background-color: var(--primary-dark);
+        .category-btn:hover, .category-btn.active {
+            background-color: #B89F65;
+            color: white;
         }
 
-        .delete-order-btn {
-            background-color: var(--error-color);
+        .products {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+            width: 100%;
         }
 
-        .delete-order-btn:hover {
-            background-color: #d32f2f;
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #000;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
         }
 
-        /* Products */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
         }
 
+        @media (min-width: 480px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
         .product-card {
-            background-color: var(--bg-color);
-            border-radius: 8px;
+            background-color: white;
             overflow: hidden;
-            box-shadow: 0 0 0 1px var(--border-color);
+            box-shadow: 0 0 0 1px #B89F65;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .product-image-container {
-            height: 180px;
             overflow: hidden;
+            position: relative;
+            width: 100%;
+            height: 200px;
         }
 
         .product-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-bottom: 1px solid #B89F65;
             transition: transform 0.5s ease;
         }
 
         .product-card:hover .product-image {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         .product-info {
             padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .product-title {
-            font-weight: 500;
+            font-size: 1rem;
             margin-bottom: 0.5rem;
-            color: var(--text-color);
+            color: #000;
+            font-weight: 500;
+            min-height: 3em;
+            transition: color 0.3s ease;
+        }
+
+        .product-card:hover .product-title {
+            color: #B89F65;
+        }
+
+        .product-price-container {
+            margin-bottom: 0.5rem;
+        }
+
+        .original-price {
+            font-size: 0.9rem;
+            color: #999;
+            text-decoration: line-through;
+            margin-left: 5px;
         }
 
         .product-price {
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #000;
+        }
+
+        .price-egp {
+            font-size: 0.9rem;
+            color: #B89F65;
+        }
+
+        .sale-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #F44336;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
         }
 
         .product-actions {
             display: flex;
             gap: 10px;
+            margin-top: auto;
         }
 
-        .edit-btn, .delete-btn {
+        .add-to-cart, .buy-now {
             flex: 1;
             padding: 8px;
+            color: #000;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
             font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            border-radius: 4px;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(184, 159, 101, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .edit-btn {
-            background-color: var(--primary-color);
+        .add-to-cart:hover, .buy-now:hover {
+            background-color: rgba(184, 159, 101, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .add-to-cart:active, .buy-now:active {
+            transform: translateY(0);
+        }
+
+        .buy-now {
+            background-color: rgba(0, 0, 0, 0.7);
             color: white;
         }
 
-        .edit-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .delete-btn {
-            background-color: var(--error-color);
-            color: white;
-        }
-
-        .delete-btn:hover {
-            background-color: #d32f2f;
-        }
-
-        /* Swap Products Section */
-        .swap-section {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background-color: var(--primary-light);
-            border-radius: 8px;
-            border: 1px dashed var(--primary-color);
-        }
-
-        .swap-section h3 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .swap-controls {
+        /* Sold Out Styles */
+        .sold-out-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            justify-content: center;
             align-items: center;
+            font-weight: bold;
+            color: #F44336;
+            font-size: 1.5rem;
+            border-radius: 8px;
         }
 
-        .swap-select {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-        }
-
-        .swap-btn {
-            background-color: var(--primary-color);
+        .sold-out-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #F44336;
             color: white;
-            border: none;
-            padding: 8px 16px;
+            padding: 5px 10px;
             border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
         }
 
-        .swap-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .swap-btn:disabled {
-            background-color: var(--border-color);
+        .sold-out-actions .add-to-cart,
+        .sold-out-actions .buy-now {
+            opacity: 0.5;
+            pointer-events: none;
             cursor: not-allowed;
         }
 
-        /* Reviews */
-        .reviews-container {
-            margin-top: 2rem;
+        /* Product Details Page */
+        .product-details {
+            display: none;
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+            width: 100%;
+            animation: fadeIn 0.5s ease;
         }
 
-        .review-card {
-            background-color: var(--card-bg);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-details-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .product-details-container {
+                flex-direction: row;
+            }
+        }
+
+        .product-details-images {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .product-details-main-image {
+            grid-column: span 2;
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
             border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid #B89F65;
+        }
+
+        .product-details-thumbnail {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #B89F65;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .product-details-thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+        .product-details-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-details-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #000;
+            font-weight: 500;
+        }
+
+        .product-details-price-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .product-details-original-price {
+            font-size: 1.5rem;
+            color: #999;
+            text-decoration: line-through;
+            margin-left: 10px;
+        }
+
+        .product-details-price {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #000;
+        }
+
+        .product-details-description {
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .back-to-products {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .back-to-products:hover {
+            color: #B89F65;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid #B89F65;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .reviews-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .average-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .average-rating-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            color: #FFD700;
+            font-size: 1.2rem;
+        }
+
+        .add-review-btn {
+            background-color: #B89F65;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .add-review-btn:hover {
+            background-color: #8a6d3b;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .review-item {
+            padding: 1.5rem;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
         }
 
         .review-header {
@@ -436,184 +521,26 @@
             margin-bottom: 0.5rem;
         }
 
-        .review-user {
+        .review-author {
             font-weight: 600;
-            color: var(--primary-color);
+            color: #000;
         }
 
         .review-date {
-            color: var(--text-light);
-            font-size: 0.8rem;
-        }
-
-        .review-stars {
-            color: var(--warning-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .review-comment {
-            margin-bottom: 0.5rem;
-        }
-
-        .delete-review-btn {
-            background-color: var(--error-color);
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .delete-review-btn:hover {
-            background-color: #d32f2f;
-        }
-
-        .reviews-count {
-            color: var(--primary-color);
+            color: #666;
             font-size: 0.9rem;
+        }
+
+        .review-rating {
             margin-bottom: 0.5rem;
         }
 
-        .view-reviews-btn {
-            background: none;
-            border: none;
-            color: var(--info-color);
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-decoration: underline;
+        .review-text {
+            line-height: 1.6;
         }
 
-        /* Add Product Form */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .btn-secondary {
-            background-color: var(--border-color);
-            color: var(--text-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: #e0e0e0;
-        }
-
-        /* Categories */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .category-card {
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .category-card:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .category-name {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .product-count {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Analytics */
-        .analytics-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .analytics-card {
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .analytics-card h3 {
-            font-size: 1rem;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
-        }
-
-        .analytics-value {
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .analytics-change {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .chart-container {
-            height: 300px;
-            margin-bottom: 2rem;
-        }
-
-        /* Modals */
-        .modal-overlay {
+        /* Review Form Modal */
+        .review-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -629,356 +556,889 @@
             transition: all 0.3s ease;
         }
 
-        .modal-overlay.active {
+        .review-modal.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .modal {
-            background-color: var(--bg-color);
+        .review-form-container {
+            background-color: white;
             border-radius: 8px;
             width: 90%;
-            max-width: 800px;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #B89F65;
+        }
+
+        .review-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #B89F65;
+        }
+
+        .close-review {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #B89F65;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .rating-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .rating-star {
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .rating-star.active {
+            color: #FFD700;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #B89F65;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #8a6d3b;
+        }
+
+        .btn-secondary {
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Cart Modal */
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            max-width: 440px;
+            background-color: white;
+            box-shadow: 2.2px 0 11px rgba(0, 0, 0, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #B89F65;
+        }
+
+        .cart-modal.open {
+            transform: translateX(0);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.65rem;
+            border-bottom: 1px solid #B89F65;
+        }
+
+        .cart-title {
+            font-size: 1.65rem;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.65rem;
+            cursor: pointer;
+            color: #000;
+            transition: transform 0.3s;
+        }
+
+        .close-cart:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            margin-bottom: 1.1rem;
+            border-bottom: 1px solid #B89F65;
+            padding-bottom: 1.1rem;
+            transition: transform 0.3s;
+            gap: 16.5px;
+        }
+
+        .cart-item:hover {
+            transform: translateX(5.5px);
+        }
+
+        .cart-item-image {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 8.8px;
+            transition: transform 0.3s;
+        }
+
+        .cart-item:hover .cart-item-image {
+            transform: scale(1.05);
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 0.55rem;
+            color: #000;
+        }
+
+        .cart-item-price {
+            color: #666;
+            margin-bottom: 0.55rem;
+            opacity: 0.7;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5.5px;
+        }
+
+        .quantity-btn {
+            background-color: #f8f8f8;
+            border: none;
+            width: 27.5px;
+            height: 27.5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-radius: 8.8px;
+            color: #000;
+            transition: background-color 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background-color: #B89F65;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .quantity-input {
+            width: 44px;
+            height: 27.5px;
+            text-align: center;
+            border: 1px solid #B89F65;
+            border-radius: 8.8px;
+            margin: 0 0.55rem;
+            background-color: white;
+            color: #000;
+            transition: border-color 0.3s;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: #B89F65;
+        }
+
+        .remove-item {
+            color: #ff4444;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: transform 0.3s;
+            align-self: flex-start;
+        }
+
+        .remove-item:hover {
+            transform: scale(1.2);
+        }
+
+        .cart-summary {
+            padding: 1.65rem;
+            border-top: 1px solid #B89F65;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.32rem;
+            font-weight: 600;
+            margin-bottom: 1.65rem;
+            color: #000;
+        }
+
+        .shipping-cost {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        .grand-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.65rem;
+            color: #000;
+            border-top: 1px solid #B89F65;
+            padding-top: 1rem;
+        }
+
+        .checkout-btn {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 1.1rem;
+            border-radius: 8.8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #128C7E;
+            transform: translateY(-2.2px) scale(1.02);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .empty-cart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.2rem;
+            text-align: center;
+            height: 100%;
+        }
+
+        .empty-cart-image {
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            margin-bottom: 1.65rem;
+            transition: transform 0.5s;
+        }
+
+        .empty-cart-image:hover {
+            transform: rotate(11deg);
+        }
+
+        .empty-cart-message {
+            font-size: 1.32rem;
+            color: #000;
+            margin-bottom: 1.65rem;
+            line-height: 1.6;
+            opacity: 0.7;
+        }
+
+        .start-shopping-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 0.88rem 1.65rem;
+            border-radius: 8.8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 1.045rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .start-shopping-btn:hover {
+            background-color: #333;
+            transform: translateY(-2.2px) scale(1.02);
+        }
+
+        /* Checkout Form Modal */
+        .checkout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .checkout-form-container {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
             padding: 2rem;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .modal-header {
+        .checkout-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #B89F65;
         }
 
-        .modal-title {
+        .checkout-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: var(--primary-color);
+            color: #B89F65;
         }
 
-        .close-modal {
+        .close-checkout {
             background: none;
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: var(--text-light);
+            color: #666;
         }
 
-        /* Image Upload */
-        .image-upload-container {
-            margin-bottom: 1.5rem;
+        .checkout-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .image-upload-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* Custom Notification */
+        .custom-notification {
+            position: fixed;
+            top: 22px;
+            right: 22px;
+            background-color: white;
+            color: #000;
+            padding: 16.5px;
+            border-radius: 8.8px;
+            box-shadow: 0 4.4px 13.2px rgba(0, 0, 0, 0.15);
+            z-index: 1100;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 11px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            border: 1px solid #B89F65;
+        }
+
+        .custom-notification.show {
+            transform: translateX(0);
+        }
+
+        .custom-notification i {
+            font-size: 1.32rem;
+        }
+
+        /* Social Media Icons */
+        .social-media {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 1.5rem;
+            background-color: white;
+            border-top: 1px solid #B89F65;
+        }
+
+        .social-icon {
+            color: #B89F65;
+            font-size: 1.5rem;
             transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: #8a6d3b;
+            transform: scale(1.2);
+        }
+
+        footer {
+            background-color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Powered by */
+        .powered-by {
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        .powered-by a {
+            color: #2196F3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Use Saved Info Checkbox */
+        .use-saved-info {
+            display: flex;
+            align-items: center;
             margin-bottom: 1rem;
         }
 
-        .image-upload-btn:hover {
-            background-color: var(--primary-dark);
+        .use-saved-info input {
+            margin-left: 8px;
         }
 
-        .image-preview {
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 280px;
+            background-color: white;
+            box-shadow: -2.2px 0 11px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1rem;
+            flex-direction: column;
+            border: 1px solid #B89F65;
         }
 
-        .image-preview-item {
-            position: relative;
-            width: 100px;
-            height: 100px;
+        .side-menu.open {
+            transform: translateX(0);
         }
 
-        .image-preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-
-        .remove-image-btn {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: var(--error-color);
-            color: white;
-            border: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+        .side-menu-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            padding: 1.65rem;
+            border-bottom: 1px solid #B89F65;
+        }
+
+        .side-menu-title {
+            font-size: 1.65rem;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .close-side-menu {
+            background: none;
+            border: none;
+            font-size: 1.65rem;
             cursor: pointer;
-            font-size: 12px;
+            color: #000;
+            transition: transform 0.3s;
+        }
+
+        .close-side-menu:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .side-menu-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.1rem;
+        }
+
+        .side-menu-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .side-menu-category {
+            padding: 12px 15px;
+            background-color: #f8f8f8;
+            border: 1px solid #B89F65;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .side-menu-category:hover, .side-menu-category.active {
+            background-color: #B89F65;
+            color: white;
+        }
+
+        .side-menu-social {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 1.5rem;
+            border-top: 1px solid #B89F65;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .order-card {
-                grid-template-columns: 1fr;
-            }
-            
-            .admin-container {
-                padding: 1rem;
-            }
-            
-            .admin-tabs {
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-
             .form-row {
                 flex-direction: column;
                 gap: 0;
             }
-
-            .swap-controls {
+            
+            .product-details-container {
                 flex-direction: column;
             }
-
-            .swap-select {
-                width: 100%;
+            
+            .product-details-images {
+                margin-bottom: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Password Protection -->
-    <div class="password-modal" id="passwordModal">
-        <div class="password-box">
-            <h2>لوحة تحكم سموث</h2>
-            <input type="password" class="password-input" id="passwordInput" placeholder="كلمة المرور">
-            <button class="password-submit" id="passwordSubmit">دخول</button>
-            <p class="password-error" id="passwordError">كلمة المرور غير صحيحة</p>
+    <!-- Shipping Banner -->
+    <div class="shipping-banner">
+        الشحن 35 جنيه لكل محفظات مصر
+    </div>
+
+    <!-- Main Site Header -->
+    <header>
+        <button class="menu-btn" id="menuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo">
+            <img src="https://i.postimg.cc/Tw3QkCTY/Chat-GPT-Image-Jul-20-2025-01-07-05-PM.png" alt="سموث Logo">
+        </div>
+        <div class="header-actions">
+            <button class="cart-btn" id="cartBtn">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="categories" id="categoriesContainer">
+        <!-- Categories will be loaded here -->
+    </div>
+
+    <section class="products" id="productsSection">
+        <h2 class="section-title" id="categoryTitle">منتجات مميزة</h2>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will load here -->
+        </div>
+    </section>
+
+    <section class="product-details" id="productDetailsSection">
+        <a href="#" class="back-to-products" id="backToProducts">&larr; العودة إلى المنتجات</a>
+        <div class="product-details-container" id="productDetailsContainer">
+            <!-- Product details will load here -->
+        </div>
+        <div class="reviews-section" id="reviewsSection">
+            <!-- Reviews will load here -->
+        </div>
+    </section>
+
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h3 class="side-menu-title">القائمة</h3>
+            <button class="close-side-menu" id="closeSideMenu">&times;</button>
+        </div>
+        <div class="side-menu-content">
+            <div class="side-menu-categories" id="sideMenuCategories">
+                <!-- Categories will be loaded here -->
+            </div>
+            <div class="side-menu-social">
+                <a href="https://www.facebook.com/share/2Habbsrh8SZfrM6K/?mibextid=qi2Omg" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/smooth.haircareeg?igsh=dzBlMnR3bnJlaXR0" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/201096928182" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+            </div>
         </div>
     </div>
 
-    <!-- Admin Panel -->
-    <div class="admin-panel" id="adminPanel" style="display: none;">
-        <!-- Admin Header -->
-        <header class="admin-header">
-            <div class="admin-logo">
-                <img src="https://i.postimg.cc/Tw3QkCTY/Chat-GPT-Image-Jul-20-2025-01-07-05-PM.png" alt="smoth Logo" class="logo-img">
-                <h1 class="admin-title">لوحة تحكم سموث</h1>
-            </div>
-            <button class="logout-btn" id="logoutBtn">
-                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-            </button>
-        </header>
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h3 class="cart-title">سلة التسوق</h3>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
         
-        <!-- Admin Container -->
-        <div class="admin-container">
-            <div class="admin-tabs">
-                <div class="admin-tab active" data-tab="dashboard">لوحة التحكم</div>
-                <div class="admin-tab" data-tab="orders">الطلبات</div>
-                <div class="admin-tab" data-tab="products">المنتجات</div>
-                <div class="admin-tab" data-tab="add-product">إضافة منتج</div>
-                <div class="admin-tab" data-tab="categories">الفئات</div>
-                <div class="admin-tab" data-tab="reviews">التقييمات</div>
+        <div class="cart-items" id="cartItems">
+            <div class="empty-cart-container">
+                <img src="https://i.postimg.cc/76YYts1C/file-00000000b73461f8909e28caada2270f.png" alt="Empty Cart" class="empty-cart-image">
+                <p class="empty-cart-message">سلة التسوق الخاصة بك فارغة<br>لم تقم بإضافة أي منتجات بعد<br>تصفح المتجر واختر ما يعجبك!</p>
+                <button class="start-shopping-btn" onclick="closeCart()">ابدأ التسوق الآن</button>
             </div>
-            
-            <!-- Dashboard Tab -->
-            <div class="admin-tab-content active" id="dashboard-tab">
-                <div class="admin-card">
-                    <h2>نظرة عامة على المتجر</h2>
-                    <button class="refresh-btn" id="refreshBtn">
-                        <i class="fas fa-sync-alt"></i> تحديث البيانات
-                    </button>
-                    <div class="analytics-cards">
-                        <div class="analytics-card">
-                            <h3>إجمالي المبيعات</h3>
-                            <div class="analytics-value" id="totalSales">0 جنيه</div>
-                            <div class="analytics-change" id="salesChange">+0% من الشهر الماضي</div>
-                        </div>
-                        <div class="analytics-card">
-                            <h3>إجمالي الطلبات</h3>
-                            <div class="analytics-value" id="totalOrders">0</div>
-                            <div class="analytics-change" id="ordersChange">+0% من الشهر الماضي</div>
-                        </div>
-                        <div class="analytics-card">
-                            <h3>المنتجات</h3>
-                            <div class="analytics-value" id="totalProducts">0</div>
-                            <div class="analytics-change" id="productsChange">+0% من الشهر الماضي</div>
-                        </div>
+        </div>
+        <div class="cart-summary">
+            <div class="cart-total">
+                <span>إجمالي المنتجات:</span>
+                <span id="cartTotalPrice">0 جنيه</span>
+            </div>
+            <div class="shipping-cost">
+                <span>تكلفة الشحن:</span>
+                <span id="shippingPrice">35 جنيه</span>
+            </div>
+            <div class="grand-total">
+                <span>الإجمالي النهائي:</span>
+                <span id="grandTotalPrice">35 جنيه</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">
+                <i class="fas fa-shopping-bag"></i>
+                تأكيد الطلب
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Form Modal -->
+    <div class="checkout-modal" id="checkoutModal">
+        <div class="checkout-form-container">
+            <div class="checkout-header">
+                <h3 class="checkout-title">إتمام الطلب</h3>
+                <button class="close-checkout" id="closeCheckout">&times;</button>
+            </div>
+            <form id="checkoutForm" class="checkout-form">
+                <div id="savedInfoContainer" class="use-saved-info" style="display: none;">
+                    <input type="checkbox" id="useSavedInfo" checked>
+                    <label for="useSavedInfo">استخدام معلوماتي المحفوظة</label>
+                </div>
+                <div class="form-group">
+                    <label for="customerName">الاسم بالكامل</label>
+                    <input type="text" id="customerName" class="form-control" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerPhone">رقم الهاتف</label>
+                        <input type="tel" id="customerPhone" class="form-control" required>
                     </div>
-                    
-                    <div class="chart-container">
-                        <canvas id="salesChart"></canvas>
+                    <div class="form-group">
+                        <label for="customerPhone2">رقم هاتف إضافي (اختياري)</label>
+                        <input type="tel" id="customerPhone2" class="form-control">
                     </div>
                 </div>
                 
-                <div class="admin-card">
-                    <h2>أحدث الطلبات</h2>
-                    <div class="orders-list" id="recentOrders">
-                        <!-- Recent orders will be loaded here -->
-                    </div>
+                <div class="form-group">
+                    <label for="customerAddress">العنوان</label>
+                    <textarea id="customerAddress" class="form-control" required></textarea>
                 </div>
-            </div>
-            
-            <!-- Orders Tab -->
-            <div class="admin-tab-content" id="orders-tab">
-                <div class="admin-card">
-                    <h2>إدارة الطلبات</h2>
-                    <div class="orders-list" id="ordersList">
-                        <!-- Orders will be loaded here -->
-                    </div>
+                
+                <div class="form-group">
+                    <label for="customerGovernorate">المحافظة</label>
+                    <select id="customerGovernorate" class="form-control" required>
+                        <option value="">اختر المحافظة</option>
+                        <option value="القاهرة">القاهرة</option>
+                        <option value="الإسكندرية">الإسكندرية</option>
+                        <option value="الجيزة">الجيزة</option>
+                        <option value="الدقهلية">الدقهلية</option>
+                        <option value="الشرقية">الشرقية</option>
+                        <option value="القليوبية">القليوبية</option>
+                        <option value="البحيرة">البحيرة</option>
+                        <option value="المنوفية">المنوفية</option>
+                        <option value="الغربية">الغربية</option>
+                        <option value="كفر الشيخ">كفر الشيخ</option>
+                        <option value="دمياط">دمياط</option>
+                        <option value="بورسعيد">بورسعيد</option>
+                        <option value="الإسماعيلية">الإسماعيلية</option>
+                        <option value="السويس">السويس</option>
+                        <option value="شمال سيناء">شمال سيناء</option>
+                        <option value="جنوب سيناء">جنوب سيناء</option>
+                        <option value="بني سويف">بني سويف</option>
+                        <option value="الفيوم">الفيوم</option>
+                        <option value="المنيا">المنيا</option>
+                        <option value="أسيوط">أسيوط</option>
+                        <option value="سوهاج">سوهاج</option>
+                        <option value="قنا">قنا</option>
+                        <option value="الأقصر">الأقصر</option>
+                        <option value="أسوان">أسوان</option>
+                        <option value="البحر الأحمر">البحر الأحمر</option>
+                        <option value="الوادي الجديد">الوادي الجديد</option>
+                        <option value="مطروح">مطروح</option>
+                    </select>
                 </div>
-            </div>
-            
-            <!-- Products Tab -->
-            <div class="admin-tab-content" id="products-tab">
-                <div class="admin-card">
-                    <h2>إدارة المنتجات</h2>
-                    <div class="products-grid" id="adminProductsGrid">
-                        <!-- Products will be loaded here -->
-                    </div>
-
-                    <!-- Swap Products Section -->
-                    <div class="swap-section">
-                        <h3>تبديل مواقع المنتجات</h3>
-                        <div class="swap-controls">
-                            <select class="swap-select" id="swapProduct1">
-                                <option value="">اختر المنتج الأول</option>
-                            </select>
-                            <select class="swap-select" id="swapProduct2">
-                                <option value="">اختر المنتج الثاني</option>
-                            </select>
-                            <button class="swap-btn" id="swapBtn" disabled>تبديل المواقع</button>
-                        </div>
-                        <p>اختر منتجين لتبديل مواقعهما في القائمة</p>
-                    </div>
+                
+                <div class="form-group">
+                    <label for="customerNotes">ملاحظات (اختياري)</label>
+                    <textarea id="customerNotes" class="form-control"></textarea>
                 </div>
-            </div>
-            
-            <!-- Add Product Tab -->
-            <div class="admin-tab-content" id="add-product-tab">
-                <div class="admin-card">
-                    <h2>إضافة منتج جديد</h2>
-                    <form id="productForm">
-                        <div class="form-group">
-                            <label for="productName">اسم المنتج</label>
-                            <input type="text" id="productName" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="productCategory">الفئة</label>
-                            <select id="productCategory" class="form-control" required>
-                                <!-- Categories will be populated dynamically -->
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="productDescription">الوصف</label>
-                            <textarea id="productDescription" class="form-control" required></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="productPrice">السعر (جنيه)</label>
-                            <input type="number" id="productPrice" class="form-control" step="0.01" required>
-                        </div>
-                        
-                        <div class="form-group image-upload-container">
-                            <label>صور المنتج</label>
-                            <button type="button" class="image-upload-btn" id="uploadImagesBtn">
-                                <i class="fas fa-cloud-upload-alt"></i> تحميل الصور
-                            </button>
-                            <div class="image-preview" id="imagePreview"></div>
-                            <textarea id="productImages" class="form-control" style="display: none;"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="productSoldOut"> غير متوفر
-                            </label>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" id="resetForm">إعادة تعيين</button>
-                            <button type="submit" class="btn btn-primary">حفظ المنتج</button>
-                        </div>
-                    </form>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCheckout">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">تأكيد الطلب</button>
                 </div>
-            </div>
-            
-            <!-- Categories Tab -->
-            <div class="admin-tab-content" id="categories-tab">
-                <div class="admin-card">
-                    <h2>إدارة الفئات</h2>
-                    <form id="categoryForm" style="margin-bottom: 2rem;">
-                        <div style="display: flex; gap: 1rem;">
-                            <input type="text" id="categoryName" class="form-control" placeholder="اسم الفئة الجديدة" required style="flex: 1;">
-                            <button type="submit" class="btn btn-primary">إضافة فئة</button>
-                        </div>
-                    </form>
-                    
-                    <h3>الفئات الحالية</h3>
-                    <div class="categories-grid" id="categoriesGrid">
-                        <!-- Categories will be loaded here -->
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Reviews Tab -->
-            <div class="admin-tab-content" id="reviews-tab">
-                <div class="admin-card">
-                    <h2>إدارة التقييمات</h2>
-                    <div id="reviewsList">
-                        <!-- Reviews will be loaded here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Order Details Modal -->
-        <div class="modal-overlay" id="orderModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">تفاصيل الطلب</h3>
-                    <button class="close-modal" id="closeOrderModal">&times;</button>
-                </div>
-                <div id="orderDetailsContent">
-                    <!-- Order details will be loaded here -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Product Reviews Modal -->
-        <div class="modal-overlay" id="reviewsModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="reviewsModalTitle">تقييمات المنتج</h3>
-                    <button class="close-modal" id="closeReviewsModal">&times;</button>
-                </div>
-                <div id="productReviewsContent">
-                    <!-- Product reviews will be loaded here -->
-                </div>
-            </div>
+            </form>
         </div>
     </div>
+
+    <!-- Review Form Modal -->
+    <div class="review-modal" id="reviewModal">
+        <div class="review-form-container">
+            <div class="review-header">
+                <h3 class="review-title">إضافة تقييم</h3>
+                <button class="close-review" id="closeReview">&times;</button>
+            </div>
+            <form id="reviewForm" class="review-form">
+                <div class="form-group">
+                    <label for="reviewerName">اسمك</label>
+                    <input type="text" id="reviewerName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewerPhone">رقم هاتفك</label>
+                    <input type="tel" id="reviewerPhone" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>تقييمك</label>
+                    <div class="rating-input">
+                        <i class="fas fa-star rating-star" data-rating="1"></i>
+                        <i class="fas fa-star rating-star" data-rating="2"></i>
+                        <i class="fas fa-star rating-star" data-rating="3"></i>
+                        <i class="fas fa-star rating-star" data-rating="4"></i>
+                        <i class="fas fa-star rating-star" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" id="reviewRating" value="0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewText">تعليقك (اختياري)</label>
+                    <textarea id="reviewText" class="form-control"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelReview">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">إرسال التقييم</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Custom Notification -->
+    <div class="custom-notification" id="customNotification">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="notificationMessage">هذا المنتج غير متوفر!</span>
+    </div>
+
+    <footer>
+        &copy; 2025 سموث. جميع الحقوق محفوظة.
+        <div class="powered-by">Powered by <a href="https://wa.me/201156823048" target="_blank">Omar Mostafa</a></div>
+    </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
     <script>
         // Firebase configuration for smoth
         const firebaseConfig = {
-            apiKey: "AIzaSyCQdC6J5k9Z6Z9Z9Z9Z9Z9Z9Z9Z9Z9Z9",
+            apiKey: "AIzaSyCQdC6J5k9Z6Z9Z9Z9Z9Z9Z9Z9Z9",
             authDomain: "smoth-6aeb0.firebaseapp.com",
             databaseURL: "https://smoth-6aeb0-default-rtdb.firebaseio.com",
             projectId: "smoth-6aeb0",
@@ -992,70 +1452,79 @@
         const database = firebase.database();
 
         // DOM Elements
-        const passwordModal = document.getElementById('passwordModal');
-        const passwordInput = document.getElementById('passwordInput');
-        const passwordSubmit = document.getElementById('passwordSubmit');
-        const passwordError = document.getElementById('passwordError');
-        const adminPanel = document.getElementById('adminPanel');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const tabs = document.querySelectorAll('.admin-tab');
-        const tabContents = document.querySelectorAll('.admin-tab-content');
-        const productForm = document.getElementById('productForm');
-        const categoryForm = document.getElementById('categoryForm');
-        const resetFormBtn = document.getElementById('resetForm');
-        const orderModal = document.getElementById('orderModal');
-        const closeOrderModal = document.getElementById('closeOrderModal');
-        const adminProductsGrid = document.getElementById('adminProductsGrid');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const uploadImagesBtn = document.getElementById('uploadImagesBtn');
-        const imagePreview = document.getElementById('imagePreview');
-        const productImagesInput = document.getElementById('productImages');
-        const reviewsModal = document.getElementById('reviewsModal');
-        const closeReviewsModal = document.getElementById('closeReviewsModal');
-        const reviewsList = document.getElementById('reviewsList');
-        const reviewsModalTitle = document.getElementById('reviewsModalTitle');
-        const swapProduct1 = document.getElementById('swapProduct1');
-        const swapProduct2 = document.getElementById('swapProduct2');
-        const swapBtn = document.getElementById('swapBtn');
+        const productsGrid = document.getElementById('productsGrid');
+        const cartCount = document.getElementById('cartCount');
+        const cartBtn = document.getElementById('cartBtn');
+        const menuBtn = document.getElementById('menuBtn');
+        const backToProducts = document.getElementById('backToProducts');
+        const categoriesContainer = document.getElementById('categoriesContainer');
+        const sideMenuCategories = document.getElementById('sideMenuCategories');
+        const categoryTitle = document.getElementById('categoryTitle');
+        const productDetailsSection = document.getElementById('productDetailsSection');
+        const productDetailsContainer = document.getElementById('productDetailsContainer');
+        const productsSection = document.getElementById('productsSection');
+        const cartModal = document.getElementById('cartModal');
+        const closeCartBtn = document.getElementById('closeCart');
+        const cartItemsContainer = document.getElementById('cartItems');
+        const cartTotalPrice = document.getElementById('cartTotalPrice');
+        const shippingPrice = document.getElementById('shippingPrice');
+        const grandTotalPrice = document.getElementById('grandTotalPrice');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const overlay = document.getElementById('overlay');
+        const customNotification = document.getElementById('customNotification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        const checkoutModal = document.getElementById('checkoutModal');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const closeCheckout = document.getElementById('closeCheckout');
+        const cancelCheckout = document.getElementById('cancelCheckout');
+        const reviewsSection = document.getElementById('reviewsSection');
+        const reviewModal = document.getElementById('reviewModal');
+        const reviewForm = document.getElementById('reviewForm');
+        const closeReview = document.getElementById('closeReview');
+        const cancelReview = document.getElementById('cancelReview');
+        const savedInfoContainer = document.getElementById('savedInfoContainer');
+        const useSavedInfo = document.getElementById('useSavedInfo');
+        const sideMenu = document.getElementById('sideMenu');
+        const closeSideMenu = document.getElementById('closeSideMenu');
 
         // Data
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let products = [];
         let categories = ['الكل'];
-        let orders = [];
-        let reviews = [];
-        let salesChart = null;
-        let uploadedImages = [];
+        let currentCategory = 'الكل';
+        let currentProductId = null;
+        let customerInfo = JSON.parse(localStorage.getItem('customerInfo')) || null;
 
-        // Password protection
-        const ADMIN_PASSWORD = "8401";
+        // Shipping cost
+        const SHIPPING_COST = 35;
 
-        // Check password
-        function checkPassword() {
-            if (passwordInput.value === ADMIN_PASSWORD) {
-                passwordModal.style.display = "none";
-                adminPanel.style.display = "block";
-                initApp();
-            } else {
-                passwordError.style.display = "block";
-                passwordInput.value = "";
+        // Handle routing
+        function handleRouting() {
+            const hash = window.location.hash;
+            
+            // Handle hash-based routing (e.g., #p1)
+            if (hash.startsWith('#') && hash.length > 1) {
+                const productId = hash.substring(1); // Remove the #
+                showProductDetails(productId);
+            }
+            // Default view
+            else {
+                productsSection.style.display = 'block';
+                productDetailsSection.style.display = 'none';
+                categoriesContainer.style.display = 'flex';
             }
         }
-
-        // Password submit event
-        passwordSubmit.addEventListener('click', checkPassword);
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
-        });
 
         // Initialize the app
         function initApp() {
             loadCategories();
             loadProducts();
-            loadOrders();
-            loadReviews();
+            updateCart();
             setupEventListeners();
+            handleRouting();
+            
+            // Listen for hash changes
+            window.addEventListener('hashchange', handleRouting);
         }
 
         // Load categories from Firebase
@@ -1064,882 +1533,826 @@
                 const data = snapshot.val();
                 if (data) {
                     categories = ['الكل', ...Object.values(data)];
-                    updateCategoryDropdown();
-                    renderCategories();
+                    displayCategories();
                 } else {
                     categories = ['الكل'];
-                    updateCategoryDropdown();
-                    renderCategories();
+                    displayCategories();
                 }
+            });
+        }
+
+        // Display categories on the website
+        function displayCategories() {
+            categoriesContainer.innerHTML = '';
+            sideMenuCategories.innerHTML = '';
+            
+            categories.forEach(category => {
+                // Main categories
+                const categoryBtn = document.createElement('button');
+                categoryBtn.className = `category-btn ${category === currentCategory ? 'active' : ''}`;
+                categoryBtn.textContent = category;
+                categoryBtn.addEventListener('click', () => {
+                    currentCategory = category;
+                    displayProducts();
+                    // Update active state
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    categoryBtn.classList.add('active');
+                    
+                    // Update category title
+                    categoryTitle.textContent = category === 'الكل' ? 'منتجات مميزة' : category;
+                    
+                    // Update URL
+                    window.location.hash = '';
+                });
+                categoriesContainer.appendChild(categoryBtn);
+                
+                // Side menu categories
+                const sideMenuCategory = document.createElement('button');
+                sideMenuCategory.className = `side-menu-category ${category === currentCategory ? 'active' : ''}`;
+                sideMenuCategory.textContent = category;
+                sideMenuCategory.addEventListener('click', () => {
+                    currentCategory = category;
+                    displayProducts();
+                    // Update active state
+                    document.querySelectorAll('.side-menu-category').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    sideMenuCategory.classList.add('active');
+                    
+                    // Update category title
+                    categoryTitle.textContent = category === 'الكل' ? 'منتجات مميزة' : category;
+                    
+                    // Close side menu
+                    closeSideMenuFn();
+                    
+                    // Update URL
+                    window.location.hash = '';
+                });
+                sideMenuCategories.appendChild(sideMenuCategory);
             });
         }
 
         // Load products from Firebase
         function loadProducts() {
-            database.ref('products').on('value', (snapshot) => {
+            database.ref('products').orderByChild('position').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
+                    // Convert Firebase object to array
                     products = Object.keys(data).map(key => ({
                         id: key,
-                        ...data[key]
+                        ...data[key],
+                        // Ensure soldOut is boolean (default to false if not provided)
+                        soldOut: data[key].soldOut === true,
+                        // Ensure originalPrice exists (default to price if not provided)
+                        originalPrice: data[key].originalPrice || data[key].price,
+                        // Ensure position exists (default to 0 if not provided)
+                        position: data[key].position || 0
                     }));
-                    renderProducts();
-                    updateDashboard();
-                    updateSwapDropdowns();
+                    
+                    // Sort products by position
+                    products.sort((a, b) => a.position - b.position);
+                    
+                    displayProducts();
+                    
+                    // Check if we need to show a product based on URL hash
+                    const hash = window.location.hash;
+                    if (hash.startsWith('#') && hash.length > 1) {
+                        const productId = hash.substring(1);
+                        showProductDetails(productId);
+                    }
                 } else {
                     products = [];
-                    renderProducts();
-                    updateDashboard();
-                    updateSwapDropdowns();
+                    displayProducts();
                 }
             });
         }
 
-        // Update swap products dropdowns
-        function updateSwapDropdowns() {
-            swapProduct1.innerHTML = '<option value="">اختر المنتج الأول</option>';
-            swapProduct2.innerHTML = '<option value="">اختر المنتج الثاني</option>';
+        // Display products on the website
+        function displayProducts() {
+            productsGrid.innerHTML = '';
             
-            products.forEach(product => {
-                swapProduct1.innerHTML += `<option value="${product.id}">${product.name}</option>`;
-                swapProduct2.innerHTML += `<option value="${product.id}">${product.name}</option>`;
-            });
+            const filteredProducts = currentCategory === 'الكل' 
+                ? products 
+                : products.filter(product => product.category === currentCategory);
             
-            // Enable/disable swap button based on selection
-            swapProduct1.addEventListener('change', updateSwapButton);
-            swapProduct2.addEventListener('change', updateSwapButton);
-        }
-
-        // Update swap button state
-        function updateSwapButton() {
-            const product1Selected = swapProduct1.value !== "";
-            const product2Selected = swapProduct2.value !== "";
-            const differentProducts = swapProduct1.value !== swapProduct2.value;
-            
-            swapBtn.disabled = !(product1Selected && product2Selected && differentProducts);
-        }
-
-        // Swap products positions
-        function swapProducts() {
-            const product1Id = swapProduct1.value;
-            const product2Id = swapProduct2.value;
-            
-            if (!product1Id || !product2Id || product1Id === product2Id) {
-                alert('الرجاء اختيار منتجين مختلفين للتبديل');
+            if (filteredProducts.length === 0) {
+                productsGrid.innerHTML = '<p>لا توجد منتجات متاحة في هذه الفئة</p>';
                 return;
             }
             
-            if (!confirm('هل أنت متأكد أنك تريد تبديل مواقع هذين المنتجين؟')) {
-                return;
-            }
-            
-            // Get both products
-            const product1 = products.find(p => p.id === product1Id);
-            const product2 = products.find(p => p.id === product2Id);
-            
-            if (!product1 || !product2) {
-                alert('حدث خطأ في العثور على المنتجين');
-                return;
-            }
-            
-            // Create copies without the id field
-            const product1Copy = {...product1};
-            const product2Copy = {...product2};
-            delete product1Copy.id;
-            delete product2Copy.id;
-            
-            // Swap the products in Firebase
-            database.ref(`products/${product1Id}`).set(product2Copy)
-                .then(() => {
-                    return database.ref(`products/${product2Id}`).set(product1Copy);
-                })
-                .then(() => {
-                    alert('تم تبديل مواقع المنتجين بنجاح');
-                    swapProduct1.value = "";
-                    swapProduct2.value = "";
-                    swapBtn.disabled = true;
-                })
-                .catch(error => {
-                    alert('حدث خطأ أثناء تبديل المنتجين: ' + error.message);
-                });
-        }
-
-        // Load orders from Firebase
-        function loadOrders() {
-            database.ref('orders').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    orders = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }));
-                    renderOrders();
-                    renderRecentOrders();
-                    updateDashboard();
-                } else {
-                    orders = [];
-                    renderOrders();
-                    renderRecentOrders();
-                    updateDashboard();
-                }
-            });
-        }
-
-        // Load reviews from Firebase with proper data validation
-        function loadReviews() {
-            database.ref('reviews').on('value', (snapshot) => {
-                const data = snapshot.val();
-                reviews = [];
+            filteredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
                 
-                if (data) {
-                    // Iterate through each product's reviews
-                    Object.keys(data).forEach(productId => {
-                        const productReviews = data[productId];
-                        
-                        // Check if productReviews is an object (not null or array)
-                        if (productReviews && typeof productReviews === 'object') {
-                            // Iterate through each review for this product
-                            Object.keys(productReviews).forEach(reviewId => {
-                                const review = productReviews[reviewId];
-                                
-                                // Validate review structure
-                                if (review && typeof review === 'object') {
-                                    const validReview = {
-                                        id: reviewId,
-                                        productId: productId,
-                                        userName: review.name || review.userName || 'مستخدم غير معروف',
-                                        rating: typeof review.rating === 'number' ? Math.min(5, Math.max(1, review.rating)) : 5,
-                                        comment: review.comment || review.text || '',
-                                        timestamp: review.timestamp || review.date || Date.now()
-                                    };
-                                    reviews.push(validReview);
-                                }
-                            });
-                        }
-                    });
-                }
+                // Check if product is sold out
+                const isSoldOut = product.soldOut === true;
+                // Check if product is on sale (price < originalPrice)
+                const isOnSale = product.price < product.originalPrice;
                 
-                renderReviews();
-                renderProductReviewCounts();
-            }, (error) => {
-                console.error('Error loading reviews:', error);
-                reviews = [];
-                renderReviews();
-                renderProductReviewCounts();
+                productCard.innerHTML = `
+                    <div class="product-image-container">
+                        ${isSoldOut ? '<div class="sold-out-overlay">نفذ من المخزن</div>' : ''}
+                        ${isSoldOut ? '<div class="sold-out-badge">نفذ</div>' : ''}
+                        ${isOnSale ? '<div class="sale-badge">خصم</div>' : ''}
+                        <img src="${product.image}" alt="${product.name}" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">${product.price.toFixed(2)} <span class="price-egp">جنيه</span></span>
+                            ${isOnSale ? `<span class="original-price">${product.originalPrice.toFixed(2)} جنيه</span>` : ''}
+                        </div>
+                        <div class="product-actions ${isSoldOut ? 'sold-out-actions' : ''}">
+                            <button class="add-to-cart" data-id="${product.id}" ${isSoldOut ? 'disabled' : ''}>إضافة إلى السلة</button>
+                            <button class="buy-now" data-id="${product.id}" ${isSoldOut ? 'disabled' : ''}>شراء الآن</button>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
             });
-        }
 
-        // Update dashboard stats
-        function updateDashboard() {
-            // Total Sales
-            const totalSales = orders.reduce((sum, order) => {
-                return sum + (parseFloat(order.total) || 0);
-            }, 0);
-            document.getElementById('totalSales').textContent = `${totalSales.toFixed(2)} جنيه`;
-            
-            // Total Orders
-            document.getElementById('totalOrders').textContent = orders.length;
-            
-            // Total Products
-            document.getElementById('totalProducts').textContent = products.length;
-            
-            // Update sales chart
-            updateSalesChart();
-        }
+            // Add event listeners to "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart:not([disabled])').forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
 
-        // Update sales chart
-        function updateSalesChart() {
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            
-            // Group orders by month
-            const monthlySales = {};
-            orders.forEach(order => {
-                const date = new Date(order.date);
-                const monthYear = `${date.getMonth() + 1}/${date.getFullYear()}`;
-                
-                if (!monthlySales[monthYear]) {
-                    monthlySales[monthYear] = 0;
-                }
-                
-                monthlySales[monthYear] += parseFloat(order.total) || 0;
+            // Add event listeners to "Buy Now" buttons
+            document.querySelectorAll('.buy-now:not([disabled])').forEach(button => {
+                button.addEventListener('click', buyNow);
             });
-            
-            // Sort by date
-            const sortedMonths = Object.keys(monthlySales).sort((a, b) => {
-                const [aMonth, aYear] = a.split('/').map(Number);
-                const [bMonth, bYear] = b.split('/').map(Number);
-                return aYear === bYear ? aMonth - bMonth : aYear - bYear;
-            });
-            
-            const labels = sortedMonths;
-            const data = sortedMonths.map(month => monthlySales[month]);
-            
-            if (salesChart) {
-                salesChart.destroy();
-            }
-            
-            salesChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'المبيعات الشهرية (جنيه)',
-                        data: data,
-                        backgroundColor: 'rgba(184, 159, 101, 0.2)',
-                        borderColor: 'rgba(184, 159, 101, 1)',
-                        borderWidth: 2,
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+
+            // Add event listeners to product cards for details view
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    // Don't open details if clicking on buttons or sold out overlay
+                    if (!e.target.classList.contains('add-to-cart') && 
+                        !e.target.classList.contains('buy-now') &&
+                        !e.target.classList.contains('sold-out-overlay') &&
+                        !e.target.classList.contains('sold-out-badge') &&
+                        !e.target.classList.contains('sale-badge') &&
+                        e.target.tagName !== 'BUTTON') {
+                        const productId = card.querySelector('.add-to-cart')?.getAttribute('data-id');
+                        if (productId) {
+                            showProductDetails(productId);
                         }
                     }
-                }
+                });
             });
         }
 
-        // Render categories in admin panel
-        function renderCategories() {
-            const categoriesGrid = document.getElementById('categoriesGrid');
-            categoriesGrid.innerHTML = categories.filter(cat => cat !== 'الكل').map(category => {
-                const productCount = products.filter(p => p.category === category).length;
-                return `
-                    <div class="category-card">
-                        <div class="category-name">${category}</div>
-                        <div class="product-count">${productCount} منتجات</div>
-                        <button class="btn btn-secondary" onclick="deleteCategory('${category}')" style="width: 100%; margin-top: 1rem;">حذف</button>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Update category dropdown in admin panel
-        function updateCategoryDropdown() {
-            const categorySelect = document.getElementById('productCategory');
-            categorySelect.innerHTML = categories.filter(cat => cat !== 'الكل').map(category => {
-                return `<option value="${category}">${category}</option>`;
-            }).join('');
-        }
-
-        // Render products in admin panel with review counts
-        function renderProducts() {
-            adminProductsGrid.innerHTML = products.map(product => {
-                const productReviews = reviews.filter(r => r.productId === product.id);
-                const reviewCount = productReviews.length;
-                
-                return `
-                    <div class="product-card">
-                        <div class="product-image-container">
-                            <img src="${product.image}" alt="${product.name}" class="product-image">
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">${product.name}</h3>
-                            <div class="product-price">${product.price} جنيه</div>
-                            <div class="reviews-count">
-                                ${reviewCount} تقييمات 
-                                <button class="view-reviews-btn" onclick="viewProductReviews('${product.id}', '${product.name}')">(عرض)</button>
-                            </div>
-                            <div class="product-actions">
-                                <button class="edit-btn" onclick="editProduct('${product.id}')">تعديل</button>
-                                <button class="delete-btn" onclick="deleteProduct('${product.id}')">حذف</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Render reviews in admin panel
-        function renderReviews() {
-            if (reviews.length === 0) {
-                reviewsList.innerHTML = '<p>لا توجد تقييمات حتى الآن</p>';
+        // Show product details
+        function showProductDetails(productId) {
+            // First check if products are loaded
+            if (products.length === 0) {
+                // If products aren't loaded yet, wait a bit and try again
+                setTimeout(() => showProductDetails(productId), 500);
                 return;
             }
             
-            // Group reviews by product
-            const reviewsByProduct = {};
-            reviews.forEach(review => {
-                if (!reviewsByProduct[review.productId]) {
-                    reviewsByProduct[review.productId] = [];
-                }
-                reviewsByProduct[review.productId].push(review);
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                // If product not found, redirect to home
+                window.location.hash = '';
+                productsSection.style.display = 'block';
+                productDetailsSection.style.display = 'none';
+                categoriesContainer.style.display = 'flex';
+                return;
+            }
+            
+            currentProductId = productId;
+            
+            // Update URL
+            window.location.hash = productId;
+            
+            // Hide categories when viewing product details
+            categoriesContainer.style.display = 'none';
+            
+            // Get all images (main + additional)
+            const allImages = [product.image];
+            if (product.images) {
+                allImages.push(...product.images.split(','));
+            }
+            
+            // Create thumbnails HTML
+            const thumbnailsHTML = allImages.map((img, index) => `
+                <img src="${img.trim()}" alt="${product.name} ${index + 1}" class="product-details-thumbnail" 
+                     onclick="document.getElementById('main-product-image').src = '${img.trim()}'">
+            `).join('');
+            
+            // Check if product is sold out
+            const isSoldOut = product.soldOut === true;
+            // Check if product is on sale
+            const isOnSale = product.price < product.originalPrice;
+            
+            productDetailsContainer.innerHTML = `
+                <div class="product-details-images">
+                    <img src="${product.image}" alt="${product.name}" class="product-details-main-image" id="main-product-image">
+                    ${thumbnailsHTML}
+                </div>
+                <div class="product-details-info">
+                    <h1 class="product-details-title">${product.name}</h1>
+                    <div class="product-details-price-container">
+                        <span class="product-details-price">${product.price.toFixed(2)} جنيه</span>
+                        ${isOnSale ? `<span class="product-details-original-price">${product.originalPrice.toFixed(2)} جنيه</span>` : ''}
+                    </div>
+                    <p class="product-details-description">${product.description || 'لا يوجد وصف متاح.'}</p>
+                    <div class="product-actions ${isSoldOut ? 'sold-out-actions' : ''}">
+                        <button class="add-to-cart" data-id="${product.id}" ${isSoldOut ? 'disabled' : ''}>إضافة إلى السلة</button>
+                        <button class="buy-now" data-id="${product.id}" ${isSoldOut ? 'disabled' : ''}>شراء الآن</button>
+                    </div>
+                    ${isSoldOut ? '<p style="color: #F44336; font-weight: bold;">هذا المنتج غير متوفر حالياً</p>' : ''}
+                </div>
+            `;
+            
+            // Add event listeners to buttons in details view
+            const addToCartBtn = productDetailsContainer.querySelector('.add-to-cart:not([disabled])');
+            const buyNowBtn = productDetailsContainer.querySelector('.buy-now:not([disabled])');
+            
+            if (addToCartBtn) addToCartBtn.addEventListener('click', addToCart);
+            if (buyNowBtn) buyNowBtn.addEventListener('click', buyNow);
+            
+            productsSection.style.display = 'none';
+            productDetailsSection.style.display = 'block';
+            
+            // Track ViewContent event for Facebook Pixel
+            fbq('track', 'ViewContent', {
+                content_ids: [product.id],
+                content_type: 'product',
+                content_name: product.name,
+                currency: 'EGP',
+                value: product.price
             });
             
-            // Find product names for each review
-            reviewsList.innerHTML = Object.keys(reviewsByProduct).map(productId => {
-                const productReviews = reviewsByProduct[productId];
-                const product = products.find(p => p.id === productId);
-                const productName = product ? product.name : 'منتج غير معروف';
+            // Load reviews for this product
+            loadProductReviews(productId);
+        }
+
+        // Load product reviews
+        function loadProductReviews(productId) {
+            database.ref(`reviews/${productId}`).on('value', (snapshot) => {
+                const reviewsData = snapshot.val();
+                let reviews = [];
+                let totalRating = 0;
+                let reviewCount = 0;
                 
-                return `
-                    <div class="admin-card">
-                        <h3>${productName}</h3>
-                        <p class="reviews-count">${productReviews.length} تقييمات</p>
-                        <div class="reviews-container">
-                            ${productReviews.map(review => `
-                                <div class="review-card">
-                                    <div class="review-header">
-                                        <span class="review-user">${review.userName}</span>
-                                        <span class="review-date">${new Date(review.timestamp).toLocaleDateString()}</span>
-                                    </div>
-                                    <div class="review-stars">
-                                        ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
-                                    </div>
-                                    <div class="review-comment">${review.comment || 'لا توجد تعليقات'}</div>
-                                    <button class="delete-review-btn" onclick="deleteReview('${review.id}', '${review.productId}')">
-                                        <i class="fas fa-trash"></i> حذف التقييم
-                                    </button>
+                if (reviewsData) {
+                    reviews = Object.keys(reviewsData).map(key => ({
+                        id: key,
+                        ...reviewsData[key]
+                    }));
+                    
+                    // Calculate average rating
+                    reviews.forEach(review => {
+                        totalRating += review.rating;
+                        reviewCount++;
+                    });
+                }
+                
+                const averageRating = reviewCount > 0 ? (totalRating / reviewCount).toFixed(1) : 0;
+                
+                // Render reviews section
+                renderReviewsSection(reviews, averageRating, reviewCount);
+            });
+        }
+
+        // Render reviews section
+        function renderReviewsSection(reviews, averageRating, reviewCount) {
+            let reviewsHTML = `
+                <div class="reviews-header">
+                    <h3 class="reviews-title">تقييمات العملاء</h3>
+                    <div class="average-rating">
+                        <span class="average-rating-value">${averageRating}</span>
+                        <div class="star-rating">
+                            ${renderStars(averageRating)}
+                        </div>
+                        <span>(${reviewCount} تقييمات)</span>
+                    </div>
+                </div>
+            `;
+            
+            if (reviews.length > 0) {
+                reviewsHTML += `
+                    <div class="reviews-list">
+                        ${reviews.map(review => `
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <span class="review-author">${review.name}</span>
+                                    <span class="review-date">${new Date(review.date).toLocaleDateString()}</span>
                                 </div>
-                            `).join('')}
-                        </div>
+                                <div class="review-rating">
+                                    ${renderStars(review.rating)}
+                                </div>
+                                ${review.text ? `<div class="review-text">${review.text}</div>` : ''}
+                            </div>
+                        `).join('')}
                     </div>
                 `;
-            }).join('');
+            } else {
+                reviewsHTML += `
+                    <p>لا توجد تقييمات لهذا المنتج بعد.</p>
+                `;
+            }
+            
+            reviewsHTML += `
+                <button class="add-review-btn" id="addReviewBtn">أضف تقييمك</button>
+            `;
+            
+            reviewsSection.innerHTML = reviewsHTML;
+            
+            // Add event listener to add review button
+            document.getElementById('addReviewBtn').addEventListener('click', openReviewForm);
         }
 
-        // Update review counts for products
-        function renderProductReviewCounts() {
-            const productElements = document.querySelectorAll('.product-card');
-            if (!productElements) return;
+        // Render stars based on rating
+        function renderStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
             
-            productElements.forEach(element => {
-                const editBtn = element.querySelector('.edit-btn');
-                if (!editBtn) return;
+            let starsHTML = '';
+            
+            // Full stars
+            for (let i = 0; i < fullStars; i++) {
+                starsHTML += '<i class="fas fa-star star"></i>';
+            }
+            
+            // Half star
+            if (hasHalfStar) {
+                starsHTML += '<i class="fas fa-star-half-alt star"></i>';
+            }
+            
+            // Empty stars
+            for (let i = 0; i < emptyStars; i++) {
+                starsHTML += '<i class="far fa-star star"></i>';
+            }
+            
+            return starsHTML;
+        }
+
+        // Open review form
+        function openReviewForm() {
+            // Auto-fill with customer info if available
+            if (customerInfo) {
+                document.getElementById('reviewerName').value = customerInfo.name;
+                document.getElementById('reviewerPhone').value = customerInfo.phone;
+            }
+            
+            // Reset rating
+            document.querySelectorAll('.rating-star').forEach(star => {
+                star.classList.remove('active');
+            });
+            document.getElementById('reviewRating').value = '0';
+            
+            // Reset review text
+            document.getElementById('reviewText').value = '';
+            
+            // Setup star rating interaction
+            document.querySelectorAll('.rating-star').forEach(star => {
+                star.addEventListener('mouseover', (e) => {
+                    const rating = parseInt(e.target.getAttribute('data-rating'));
+                    highlightStars(rating);
+                });
                 
-                const productId = editBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
-                const reviewCount = reviews.filter(r => r.productId === productId).length;
-                
-                const reviewsElement = element.querySelector('.reviews-count') || document.createElement('div');
-                reviewsElement.className = 'reviews-count';
-                reviewsElement.innerHTML = `${reviewCount} تقييمات <button class="view-reviews-btn" onclick="viewProductReviews('${productId}', '${element.querySelector('.product-title').textContent}')">(عرض)</button>`;
-                
-                if (!element.querySelector('.reviews-count')) {
-                    element.querySelector('.product-info').insertBefore(reviewsElement, element.querySelector('.product-actions'));
+                star.addEventListener('click', (e) => {
+                    const rating = parseInt(e.target.getAttribute('data-rating'));
+                    document.getElementById('reviewRating').value = rating;
+                });
+            });
+            
+            document.querySelector('.rating-input').addEventListener('mouseleave', () => {
+                const selectedRating = parseInt(document.getElementById('reviewRating').value);
+                highlightStars(selectedRating);
+            });
+            
+            // Open modal
+            reviewModal.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Highlight stars based on rating
+        function highlightStars(rating) {
+            document.querySelectorAll('.rating-star').forEach(star => {
+                const starRating = parseInt(star.getAttribute('data-rating'));
+                if (starRating <= rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
                 }
             });
         }
 
-        // View product reviews in modal
-        function viewProductReviews(productId, productName) {
-            const productReviews = reviews.filter(r => r.productId === productId);
-            
-            if (productReviews.length === 0) {
-                alert('لا توجد تقييمات لهذا المنتج حتى الآن');
-                return;
-            }
-            
-            reviewsModalTitle.textContent = `تقييمات ${productName}`;
-            document.getElementById('productReviewsContent').innerHTML = `
-                <div class="reviews-container">
-                    ${productReviews.map(review => `
-                        <div class="review-card">
-                            <div class="review-header">
-                                <span class="review-user">${review.userName}</span>
-                                <span class="review-date">${new Date(review.timestamp).toLocaleDateString()}</span>
-                            </div>
-                            <div class="review-stars">
-                                ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
-                            </div>
-                            <div class="review-comment">${review.comment || 'لا توجد تعليقات'}</div>
-                            <button class="delete-review-btn" onclick="deleteReview('${review.id}', '${review.productId}')">
-                                <i class="fas fa-trash"></i> حذف التقييم
-                            </button>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            
-            reviewsModal.classList.add('active');
+        // Close review form
+        function closeReviewForm() {
+            reviewModal.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
-        // Delete a review
-        function deleteReview(reviewId, productId) {
-            if (!confirm('هل أنت متأكد أنك تريد حذف هذا التقييم؟')) return;
-            
-            database.ref(`reviews/${productId}/${reviewId}`).remove()
-                .then(() => {
-                    alert('تم حذف التقييم بنجاح');
-                })
-                .catch(error => {
-                    alert('خطأ في حذف التقييم: ' + error.message);
-                });
-        }
-
-        // Render orders in admin panel
-        function renderOrders() {
-            const ordersList = document.getElementById('ordersList');
-            ordersList.innerHTML = orders.map(order => {
-                return `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">طلب #${order.id.substring(0, 8)}</span>
-                            <span class="order-date">${new Date(order.date).toLocaleDateString()}</span>
-                        </div>
-                        <div class="order-status status-${order.status || 'pending'}">
-                            ${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}
-                        </div>
-                        <div class="order-customer">${order.customer?.name || 'غير معروف'}</div>
-                        <div class="order-total">${order.total || '0.00'} جنيه</div>
-                        <div class="order-actions">
-                            <button class="view-btn" onclick="viewOrderDetails('${order.id}')">عرض التفاصيل</button>
-                            <button class="delete-order-btn" onclick="deleteOrder('${order.id}')">
-                                <i class="fas fa-trash"></i> حذف
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Delete an order
-        function deleteOrder(orderId) {
-            if (!confirm('هل أنت متأكد أنك تريد حذف هذا الطلب؟ لا يمكن التراجع عن هذه العملية.')) {
-                return;
-            }
-            
-            database.ref(`orders/${orderId}`).remove()
-                .then(() => {
-                    alert('تم حذف الطلب بنجاح');
-                })
-                .catch(error => {
-                    alert('حدث خطأ أثناء حذف الطلب: ' + error.message);
-                });
-        }
-
-        // Render recent orders in admin panel
-        function renderRecentOrders() {
-            const recentOrders = document.getElementById('recentOrders');
-            const recent = orders.slice(0, 5); // Get first 5 orders
-            
-            recentOrders.innerHTML = recent.map(order => {
-                return `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <span class="order-id">طلب #${order.id.substring(0, 8)}</span>
-                            <span class="order-date">${new Date(order.date).toLocaleDateString()}</span>
-                        </div>
-                        <div class="order-status status-${order.status || 'pending'}">
-                            ${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}
-                        </div>
-                        <div class="order-customer">${order.customer?.name || 'غير معروف'}</div>
-                        <div class="order-total">${order.total || '0.00'} جنيه</div>
-                        <div class="order-actions">
-                            <button class="view-btn" onclick="viewOrderDetails('${order.id}')">عرض التفاصيل</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // View order details in admin panel
-        function viewOrderDetails(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order) return;
-            
-            const orderDetailsContent = document.getElementById('orderDetailsContent');
-            orderDetailsContent.innerHTML = `
-                <div style="margin-bottom: 1.5rem;">
-                    <h4>معلومات العميل</h4>
-                    <p><strong>الاسم:</strong> ${order.customer?.name || 'غير معروف'}</p>
-                    <p><strong>الهاتف:</strong> ${order.customer?.phone || 'N/A'}</p>
-                    <p><strong>العنوان:</strong> ${order.customer?.address || 'N/A'}</p>
-                    <p><strong>المحافظة:</strong> ${order.customer?.governorate || 'N/A'}</p>
-                    <p><strong>ملاحظات:</strong> ${order.customer?.notes || 'N/A'}</p>
-                </div>
-                
-                <div style="margin-bottom: 1.5rem;">
-                    <h4>عناصر الطلب</h4>
-                    ${order.items?.map(item => `
-                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
-                            <img src="${item.image}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
-                            <div>
-                                <p><strong>${item.name}</strong></p>
-                                <p>${item.price} جنيه</p>
-                                <p>الكمية: ${item.quantity}</p>
-                            </div>
-                        </div>
-                    `).join('') || '<p>لا توجد عناصر</p>'}
-                </div>
-                
-                <div style="margin-bottom: 1.5rem;">
-                    <h4>ملخص الطلب</h4>
-                    <p><strong>الحالة:</strong> <span class="order-status status-${order.status || 'pending'}">
-                        ${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}
-                    </span></p>
-                    <p><strong>الإجمالي:</strong> ${order.total || '0.00'} جنيه</p>
-                </div>
-                
-                <div class="form-actions">
-                    <select id="orderStatusSelect" class="form-control" style="margin-bottom: 1rem;">
-                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>قيد الانتظار</option>
-                        <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>قيد المعالجة</option>
-                        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>تم الشحن</option>
-                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>تم التسليم</option>
-                        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>ملغي</option>
-                    </select>
-                    <button class="btn btn-primary" onclick="confirmStatusUpdate('${order.id}')">تحديث الحالة</button>
-                </div>
-            `;
-            
-            orderModal.classList.add('active');
-        }
-
-        // Confirm status update before changing
-        function confirmStatusUpdate(orderId) {
-            const newStatus = document.getElementById('orderStatusSelect').value;
-            
-            if (confirm(`هل أنت متأكد أنك تريد تغيير حالة الطلب إلى "${newStatus}"؟`)) {
-                updateOrderStatus(orderId, newStatus);
-            }
-        }
-
-        // Update order status in admin panel
-        function updateOrderStatus(orderId, status) {
-            database.ref(`orders/${orderId}`).update({ status })
-                .then(() => {
-                    alert('تم تحديث حالة الطلب بنجاح');
-                    orderModal.classList.remove('active');
-                })
-                .catch(error => {
-                    alert('خطأ في تحديث حالة الطلب: ' + error.message);
-                });
-        }
-
-        // Add new product in admin panel
-        function addProduct(e) {
+        // Submit review
+        function submitReview(e) {
             e.preventDefault();
             
-            const product = {
-                name: document.getElementById('productName').value,
-                category: document.getElementById('productCategory').value,
-                description: document.getElementById('productDescription').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                image: uploadedImages.length > 0 ? uploadedImages[0] : '',
-                images: uploadedImages.join(','),
-                soldOut: document.getElementById('productSoldOut').checked,
-                createdAt: firebase.database.ServerValue.TIMESTAMP
+            const name = document.getElementById('reviewerName').value.trim();
+            const phone = document.getElementById('reviewerPhone').value.trim();
+            const rating = parseInt(document.getElementById('reviewRating').value);
+            const text = document.getElementById('reviewText').value.trim();
+            
+            if (!name || !phone || rating === 0) {
+                showNotification('الرجاء إدخال الاسم ورقم الهاتف وتقييم المنتج');
+                return;
+            }
+            
+            // Save customer info for future use
+            customerInfo = { name, phone };
+            localStorage.setItem('customerInfo', JSON.stringify(customerInfo));
+            
+            const review = {
+                name,
+                phone,
+                rating,
+                text,
+                date: new Date().toISOString()
             };
             
-            if (productForm.dataset.editing === 'true') {
-                // Update existing product
-                const productId = productForm.dataset.productId;
-                database.ref(`products/${productId}`).update(product)
-                    .then(() => {
-                        alert('تم تحديث المنتج بنجاح');
-                        productForm.reset();
-                        delete productForm.dataset.editing;
-                        delete productForm.dataset.productId;
-                        imagePreview.innerHTML = '';
-                        uploadedImages = [];
-                    })
-                    .catch(error => {
-                        alert('خطأ في تحديث المنتج: ' + error.message);
-                    });
-            } else {
-                // Add new product
-                database.ref('products').push(product)
-                    .then(() => {
-                        alert('تمت إضافة المنتج بنجاح');
-                        productForm.reset();
-                        imagePreview.innerHTML = '';
-                        uploadedImages = [];
-                    })
-                    .catch(error => {
-                        alert('خطأ في إضافة المنتج: ' + error.message);
-                    });
-            }
+            // Save review to Firebase
+            database.ref(`reviews/${currentProductId}`).push(review)
+                .then(() => {
+                    showNotification('شكراً لك! تم إرسال تقييمك بنجاح.');
+                    closeReviewForm();
+                })
+                .catch(error => {
+                    showNotification('حدث خطأ أثناء إرسال التقييم: ' + error.message);
+                });
         }
 
-        // Edit product in admin panel
-        function editProduct(productId) {
+        // Buy Now function
+        function buyNow(e) {
+            const productId = e.target.getAttribute('data-id');
             const product = products.find(p => p.id === productId);
+            
             if (!product) return;
             
-            // Switch to add product tab
-            tabs.forEach(t => t.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            document.querySelector('.admin-tab[data-tab="add-product"]').classList.add('active');
-            document.getElementById('add-product-tab').classList.add('active');
-            
-            // Fill form with product data
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productCategory').value = product.category;
-            document.getElementById('productDescription').value = product.description;
-            document.getElementById('productPrice').value = product.price;
-            document.getElementById('productSoldOut').checked = product.soldOut || false;
-            
-            // Handle images
-            imagePreview.innerHTML = '';
-            uploadedImages = [];
-            
-            if (product.image) {
-                uploadedImages.push(product.image);
-                imagePreview.innerHTML += `
-                    <div class="image-preview-item">
-                        <img src="${product.image}" alt="Product Image">
-                        <button class="remove-image-btn" onclick="removeImage(${uploadedImages.length - 1})">&times;</button>
-                    </div>
-                `;
-            }
-            
-            if (product.images) {
-                const imagesArray = Array.isArray(product.images) ? product.images : product.images.split(',');
-                imagesArray.forEach((img, index) => {
-                    if (img && img.trim() !== '' && img !== product.image) {
-                        uploadedImages.push(img.trim());
-                        imagePreview.innerHTML += `
-                            <div class="image-preview-item">
-                                <img src="${img.trim()}" alt="Product Image ${index + 1}">
-                                <button class="remove-image-btn" onclick="removeImage(${uploadedImages.length - 1})">&times;</button>
-                            </div>
-                        `;
-                    }
-                });
-            }
-            
-            productImagesInput.value = uploadedImages.join('\n');
-            
-            // Add data attributes to form for editing
-            productForm.dataset.editing = 'true';
-            productForm.dataset.productId = productId;
-        }
-
-        // Remove image from preview
-        function removeImage(index) {
-            if (confirm('هل أنت متأكد أنك تريد إزالة هذه الصورة؟')) {
-                uploadedImages.splice(index, 1);
-                renderImagePreview();
-            }
-        }
-
-        // Render image preview
-        function renderImagePreview() {
-            imagePreview.innerHTML = '';
-            uploadedImages.forEach((img, index) => {
-                imagePreview.innerHTML += `
-                    <div class="image-preview-item">
-                        <img src="${img}" alt="Product Image ${index + 1}">
-                        <button class="remove-image-btn" onclick="removeImage(${index})">&times;</button>
-                    </div>
-                `;
-            });
-            productImagesInput.value = uploadedImages.join('\n');
-        }
-
-        // Delete product in admin panel
-        function deleteProduct(productId) {
-            if (!confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟')) return;
-            
-            database.ref(`products/${productId}`).remove()
-                .then(() => {
-                    // Also delete reviews for this product
-                    database.ref(`reviews/${productId}`).remove();
-                    
-                    alert('تم حذف المنتج بنجاح');
-                })
-                .catch(error => {
-                    alert('خطأ في حذف المنتج: ' + error.message);
-                });
-        }
-
-        // Add new category in admin panel
-        function addCategory(e) {
-            e.preventDefault();
-            
-            const categoryName = document.getElementById('categoryName').value.trim();
-            if (!categoryName) return;
-            
-            // Check if category already exists
-            if (categories.includes(categoryName)) {
-                alert('هذه الفئة موجودة بالفعل!');
+            // Check if product is sold out
+            if (product.soldOut === true) {
+                showNotification('هذا المنتج غير متوفر حالياً');
                 return;
             }
             
-            // Add to Firebase
-            database.ref('categories').push(categoryName)
-                .then(() => {
-                    alert('تمت إضافة الفئة بنجاح');
-                    document.getElementById('categoryName').value = '';
-                })
-                .catch(error => {
-                    alert('خطأ في إضافة الفئة: ' + error.message);
-                });
+            // Clear cart and add this product
+            cart = [{
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                quantity: 1
+            }];
+            
+            updateCart();
+            openCart();
         }
 
-        // Delete category in admin panel
-        function deleteCategory(categoryName) {
-            if (!confirm(`هل أنت متأكد أنك تريد حذف فئة "${categoryName}"؟`)) return;
+        // Add to cart function
+        function addToCart(e) {
+            const productId = e.target.getAttribute('data-id');
+            const product = products.find(p => p.id === productId);
             
-            // Find the category key in Firebase
-            database.ref('categories').once('value', (snapshot) => {
-                const data = snapshot.val();
-                let categoryKey = null;
-                
-                for (const key in data) {
-                    if (data[key] === categoryName) {
-                        categoryKey = key;
-                        break;
+            if (!product) return;
+            
+            // Check if product is sold out
+            if (product.soldOut === true) {
+                showNotification('هذا المنتج غير متوفر حالياً');
+                return;
+            }
+            
+            // Track AddToCart event for Facebook Pixel
+            fbq('track', 'AddToCart', {
+                content_ids: [product.id],
+                content_type: 'product',
+                content_name: product.name,
+                currency: 'EGP',
+                value: product.price,
+                quantity: 1
+            });
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showNotification('تمت إضافة المنتج إلى السلة');
+        }
+
+        // Update cart display
+        function updateCart() {
+            // Save to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Update totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const total = subtotal + SHIPPING_COST;
+            
+            cartTotalPrice.textContent = subtotal.toFixed(2) + ' جنيه';
+            shippingPrice.textContent = SHIPPING_COST.toFixed(2) + ' جنيه';
+            grandTotalPrice.textContent = total.toFixed(2) + ' جنيه';
+            
+            // Render items
+            renderCartItems();
+        }
+
+        // Render cart items
+        function renderCartItems() {
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="empty-cart-container">
+                        <img src="https://i.postimg.cc/76YYts1C/file-00000000b73461f8909e28caada2270f.png" alt="Empty Cart" class="empty-cart-image">
+                        <p class="empty-cart-message">سلة التسوق الخاصة بك فارغة<br>لم تقم بإضافة أي منتجات بعد<br>تصفح المتجر واختر ما يعجبك!</p>
+                        <button class="start-shopping-btn" onclick="closeCart()">ابدأ التسوق الآن</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-title">${item.name}</h4>
+                        <div class="cart-item-price">${item.price.toFixed(2)} جنيه</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.id}">
+                            <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                        </div>
+                        <button class="remove-item" data-id="${item.id}">إزالة</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Setup quantity events
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const productId = e.target.dataset.id;
+                    const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+                    let value = parseInt(input.value);
+                    
+                    if (e.target.classList.contains('plus')) {
+                        input.value = value + 1;
+                    } else if (value > 1) {
+                        input.value = value - 1;
                     }
-                }
-                
-                if (categoryKey) {
-                    database.ref(`categories/${categoryKey}`).remove()
-                        .then(() => {
-                            // Also delete products in this category
-                            const productsToDelete = products.filter(p => p.category === categoryName);
-                            productsToDelete.forEach(product => {
-                                database.ref(`products/${product.id}`).remove();
-                            });
-                            
-                            alert('تم حذف الفئة بنجاح');
-                        })
-                        .catch(error => {
-                            alert('خطأ في حذف الفئة: ' + error.message);
-                        });
-                }
+                    
+                    updateCartItem(productId, parseInt(input.value));
+                });
+            });
+            
+            // Setup input events
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const productId = e.target.dataset.id;
+                    const value = parseInt(e.target.value) || 1;
+                    e.target.value = value;
+                    updateCartItem(productId, value);
+                });
+            });
+            
+            // Setup remove events
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    cart = cart.filter(item => item.id !== e.target.dataset.id);
+                    updateCart();
+                    showNotification('تمت إزالة المنتج من السلة');
+                });
             });
         }
 
-        // Upload images using ImgBB API
-        function uploadImages() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.multiple = true;
-            
-            input.onchange = e => {
-                const files = Array.from(e.target.files);
-                
-                if (files.length > 5) {
-                    alert('يمكنك تحميل 5 صور كحد أقصى');
-                    return;
-                }
-                
-                files.forEach(file => {
-                    const formData = new FormData();
-                    formData.append('image', file);
-                    formData.append('key', 'c2c57e60d35ee21b1a379237d2672d49');
-                    
-                    fetch('https://api.imgbb.com/1/upload', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            uploadedImages.push(data.data.url);
-                            renderImagePreview();
-                        } else {
-                            alert('فشل تحميل الصورة: ' + data.error.message);
-                        }
-                    })
-                    .catch(error => {
-                        alert('حدث خطأ أثناء تحميل الصورة: ' + error.message);
-                    });
-                });
-            };
-            
-            input.click();
+        // Update cart item quantity
+        function updateCartItem(productId, quantity) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = quantity;
+                updateCart();
+            }
         }
 
-        // Refresh data (reset analytics)
-        function refreshData() {
-            if (confirm('هل أنت متأكد أنك تريد إعادة تعيين جميع البيانات؟ سيتم مسح جميع الإحصائيات والرسوم البيانية.')) {
-                // Reset sales chart
-                if (salesChart) {
-                    salesChart.destroy();
-                    salesChart = null;
-                }
-                
-                // Reset analytics values
-                document.getElementById('totalSales').textContent = '0 جنيه';
-                document.getElementById('totalOrders').textContent = '0';
-                document.getElementById('totalProducts').textContent = '0';
-                
-                // Reload all data
-                loadCategories();
-                loadProducts();
-                loadOrders();
-                loadReviews();
-                
-                alert('تم إعادة تعيين البيانات بنجاح');
+        // Open cart
+        function openCart() {
+            cartModal.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close cart
+        function closeCart() {
+            cartModal.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Open side menu
+        function openSideMenu() {
+            sideMenu.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close side menu
+        function closeSideMenuFn() {
+            sideMenu.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Open checkout form
+        function openCheckoutForm() {
+            // Check if we have saved customer info
+            if (customerInfo) {
+                savedInfoContainer.style.display = 'flex';
+                document.getElementById('customerName').value = customerInfo.name;
+                document.getElementById('customerPhone').value = customerInfo.phone;
+                document.getElementById('customerPhone2').value = customerInfo.phone2 || '';
+                document.getElementById('customerAddress').value = customerInfo.address || '';
+                document.getElementById('customerGovernorate').value = customerInfo.governorate || '';
+                document.getElementById('customerNotes').value = customerInfo.notes || '';
+            } else {
+                savedInfoContainer.style.display = 'none';
             }
+            
+            checkoutModal.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close checkout form
+        function closeCheckoutForm() {
+            checkoutModal.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Show notification
+        function showNotification(message) {
+            notificationMessage.textContent = message;
+            customNotification.classList.add('show');
+            
+            setTimeout(() => {
+                customNotification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Place order
+        function placeOrder(e) {
+            e.preventDefault();
+            
+            if (cart.length === 0) {
+                showNotification('سلة التسوق الخاصة بك فارغة');
+                return;
+            }
+            
+            const customer = {
+                name: document.getElementById('customerName').value,
+                phone: document.getElementById('customerPhone').value,
+                phone2: document.getElementById('customerPhone2').value || '',
+                address: document.getElementById('customerAddress').value,
+                governorate: document.getElementById('customerGovernorate').value,
+                notes: document.getElementById('customerNotes').value || ''
+            };
+            
+            // Save customer info for future use (checkout and reviews)
+            customerInfo = { 
+                name: customer.name, 
+                phone: customer.phone,
+                phone2: customer.phone2,
+                address: customer.address,
+                governorate: customer.governorate,
+                notes: customer.notes
+            };
+            localStorage.setItem('customerInfo', JSON.stringify(customerInfo));
+            
+            // Calculate totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const total = subtotal + SHIPPING_COST;
+            
+            const order = {
+                customer,
+                items: cart,
+                subtotal: subtotal,
+                shipping: SHIPPING_COST,
+                total: total,
+                status: 'pending',
+                date: new Date().toISOString()
+            };
+            
+            // Save to Firebase for analytics
+            database.ref('orders').push(order)
+                .then(() => {
+                    // Track the purchase with Meta Pixel
+                    fbq('track', 'Purchase', {
+                        currency: "EGP",
+                        value: total,
+                        contents: cart.map(item => ({
+                            id: item.id,
+                            quantity: item.quantity
+                        })),
+                        content_type: 'product'
+                    });
+                    
+                    // Clear cart
+                    cart = [];
+                    updateCart();
+                    
+                    // Close modals
+                    closeCheckoutForm();
+                    closeCart();
+                    
+                    // Show success message
+                    showNotification('تم تقديم الطلب بنجاح! سيتم التواصل معك قريباً');
+                    
+                    // Reset form if not using saved info
+                    if (!useSavedInfo.checked) {
+                        checkoutForm.reset();
+                    }
+                })
+                .catch(error => {
+                    showNotification('خطأ في تقديم الطلب: ' + error.message);
+                });
         }
 
         // Setup event listeners
         function setupEventListeners() {
-            // Logout button
-            logoutBtn.addEventListener('click', () => {
-                if (confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')) {
-                    window.location.href = 'index.html';
+            // Back to products button
+            backToProducts.addEventListener('click', (e) => {
+                e.preventDefault();
+                productsSection.style.display = 'block';
+                productDetailsSection.style.display = 'none';
+                categoriesContainer.style.display = 'flex';
+                // Update URL
+                window.location.hash = '';
+            });
+
+            // Cart button
+            cartBtn.addEventListener('click', openCart);
+
+            // Close cart button
+            closeCartBtn.addEventListener('click', closeCart);
+
+            // Overlay click
+            overlay.addEventListener('click', () => {
+                closeCart();
+                closeCheckoutForm();
+                closeReviewForm();
+            });
+
+            // Checkout button
+            checkoutBtn.addEventListener('click', () => {
+                if (cart.length === 0) {
+                    showNotification('سلة التسوق الخاصة بك فارغة، يرجى إضافة المنتجات أولاً');
+                    return;
                 }
+                
+                openCheckoutForm();
             });
 
-            // Close order modal
-            closeOrderModal.addEventListener('click', () => {
-                orderModal.classList.remove('active');
-            });
-
-            // Close reviews modal
-            closeReviewsModal.addEventListener('click', () => {
-                reviewsModal.classList.remove('active');
-            });
-
-            // Tab switching in admin panel
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(c => c.classList.remove('active'));
-                    
-                    tab.classList.add('active');
-                    const tabId = tab.getAttribute('data-tab');
-                    document.getElementById(`${tabId}-tab`).classList.add('active');
-                });
-            });
+            // Checkout form
+            checkoutForm.addEventListener('submit', placeOrder);
             
-            // Product form submission
-            productForm.addEventListener('submit', addProduct);
+            // Close checkout
+            closeCheckout.addEventListener('click', closeCheckoutForm);
+            cancelCheckout.addEventListener('click', closeCheckoutForm);
+
+            // Review form
+            reviewForm.addEventListener('submit', submitReview);
             
-            // Category form submission
-            categoryForm.addEventListener('submit', addCategory);
+            // Close review
+            closeReview.addEventListener('click', closeReviewForm);
+            cancelReview.addEventListener('click', closeReviewForm);
             
-            // Reset form
-            resetFormBtn.addEventListener('click', () => {
-                if (confirm('هل أنت متأكد أنك تريد إعادة تعيين النموذج؟ سيتم مسح جميع البيانات المدخلة.')) {
-                    productForm.reset();
-                    delete productForm.dataset.editing;
-                    delete productForm.dataset.productId;
-                    imagePreview.innerHTML = '';
-                    uploadedImages = [];
-                }
-            });
-
-            // Image upload button
-            uploadImagesBtn.addEventListener('click', uploadImages);
-
-            // Refresh button
-            refreshBtn.addEventListener('click', refreshData);
-
-            // Swap products button
-            swapBtn.addEventListener('click', swapProducts);
+            // Menu button
+            menuBtn.addEventListener('click', openSideMenu);
+            
+            // Close side menu
+            closeSideMenu.addEventListener('click', closeSideMenuFn);
         }
 
-        // Make functions available globally
-        window.viewProductReviews = viewProductReviews;
-        window.deleteReview = deleteReview;
-        window.viewOrderDetails = viewOrderDetails;
-        window.confirmStatusUpdate = confirmStatusUpdate;
-        window.updateOrderStatus = updateOrderStatus;
-        window.editProduct = editProduct;
-        window.deleteProduct = deleteProduct;
-        window.deleteCategory = deleteCategory;
-        window.removeImage = removeImage;
-        window.deleteOrder = deleteOrder;
+        // Initialize the app
+        initApp();
     </script>
 </body>
 </html>
